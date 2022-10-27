@@ -215,6 +215,20 @@ public class BookControllerTest {
 			
 	}
 	
+	@Test
+	@DisplayName("get-all-books-by-author-test")
+	public void givenAuthor_whenGetAllBooksByAuthor_returnBooksListFilteredAuthor() throws Exception {
+		booksList = booksList.stream().filter(b->b.getAuthorName().equals("C Author")).collect(Collectors.toList());
+		when(this.bookService.getBooksByAuthor(any())).thenReturn(booksList);
+		mockMvc.perform(get("/api/v1/book/author/{author}","C Author")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+			.andExpect(jsonPath("$[0].bookName").value("Book Name C"));
+			
+	}
+	
 	public static String asJsonString(Object obj) {
 		ObjectMapper Obj = new ObjectMapper();
 		String jsonStr = null;

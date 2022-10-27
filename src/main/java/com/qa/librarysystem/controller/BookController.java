@@ -105,8 +105,8 @@ public class BookController {
 	@GetMapping("/book/genre/{genre}")
 	public ResponseEntity<?> getBooksByGenre(@Size(min=2, max=45) @Pattern(regexp="^[a-zA-Z]+([ -])?([a-zA-Z]+)?$") @PathVariable("genre") String genre) {
 		try {
-			List<Book> allBooks = this.bookService.getBooksByGenre(genre);
-			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			List<Book> allBooksByGenre = this.bookService.getBooksByGenre(genre);
+			responseEntity = new ResponseEntity<>(allBooksByGenre, HttpStatus.OK);
 			
 		}catch(Exception e) {
 			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -117,8 +117,8 @@ public class BookController {
 	@GetMapping("/book/rating")
 	public ResponseEntity<?> getBooksByRating() {
 		try {
-			List<Book> allBooks = this.bookService.getBooksByRating();
-			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			List<Book> allBooksByRating = this.bookService.getBooksByRating();
+			responseEntity = new ResponseEntity<>(allBooksByRating, HttpStatus.OK);
 			
 		}catch(Exception e) {
 			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -129,8 +129,20 @@ public class BookController {
 	@GetMapping("/book/rating/{rating}")
 	public ResponseEntity<?> getBooksByMinRating(@Min(0) @Max(5) @PathVariable("rating") int rating) {
 		try {
-			List<Book> allBooks = this.bookService.getBooksByMinRating(rating);
-			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			List<Book> allBooksByMinRating = this.bookService.getBooksByMinRating(rating);
+			responseEntity = new ResponseEntity<>(allBooksByMinRating, HttpStatus.OK);
+			
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
+	
+	@GetMapping("/book/author/{author}")
+	public ResponseEntity<?> getBooksByAuthor(@Pattern(regexp="^[a-zA-Z]{1,} ([a-zA-Z]+ |[a-zA-Z]\\. )?[a-zA-Z]{2,}$") @Size(min=2, max=45) @PathVariable("author") String author) {
+		try {
+			List<Book> allBooksByAuthor = this.bookService.getBooksByAuthor(author);
+			responseEntity = new ResponseEntity<>(allBooksByAuthor, HttpStatus.OK);
 			
 		}catch(Exception e) {
 			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
