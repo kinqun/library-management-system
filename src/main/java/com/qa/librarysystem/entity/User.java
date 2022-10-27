@@ -95,11 +95,5 @@ public class User {
 	*/
 	private ArrayList<Book> favouriteBooks;
 	
-	@Column(name="user_books_read")
-	/*
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="book_details")
-	*/
-	private ArrayList<Book> readBooks;
 	
 }

@@ -1,5 +1,7 @@
 package com.qa.librarysystem.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
@@ -79,6 +81,18 @@ public class BookController {
 			
 		}catch(BookNotFoundException e) {
 			throw e;
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
+	
+	@GetMapping("/book")
+	public ResponseEntity<?> getAllBooks() {
+		try {
+			List<Book> allBooks = this.bookService.getAllBooks();
+			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			
 		}catch(Exception e) {
 			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
