@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -195,6 +196,30 @@ public class UserControllerTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isNotFound())
 			.andExpect(res->assertEquals("No existing user found",res.getResponse().getErrorMessage()))
+			.andExpect(res->assertTrue(res.getResolvedException() instanceof UserNotFoundException));
+		
+	}
+	
+	@Test
+	@DisplayName("delete-user-test")
+	public void givenValidUserId_whenDeleteUser_returnDeleteMsg() throws Exception {
+		when(userService.deleteUser(anyInt())).thenReturn(true);
+		mockMvc.perform(delete("/api/v1/user/{id}",anyInt())
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(res->assertEquals("user is deleted", res.getResponse().getContentAsString()));
+		
+	}
+	
+	@Test
+	@DisplayName("delete-user-invalid-id-test")
+	public void givenInvalidUserId_whenDeleteUser_returnDeleteMsg() throws Exception {
+		when(userService.deleteUser(anyInt())).thenThrow(new UserNotFoundException());
+		mockMvc.perform(delete("/api/v1/user/{id}",anyInt())
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isNotFound())
 			.andExpect(res->assertTrue(res.getResolvedException() instanceof UserNotFoundException));
 		
 	}

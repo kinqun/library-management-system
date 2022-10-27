@@ -2,6 +2,7 @@ package com.qa.librarysystem.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -133,6 +134,20 @@ public class UserServiceImplTest {
 	public void givenNonExistingUser_whenUpdateUser_returnThrowsUserNotFoundException() throws UserNotFoundException {
 		when(userRepo.findById(anyInt())).thenReturn(null);
 		assertThrows(UserNotFoundException.class, ()-> userService.updateUser(user1));
+	}
+	
+	@Test
+	@DisplayName("delete-existing-id-test")
+	public void givenExistingUserId_whenDeleteUser_returnTrue() throws UserNotFoundException{
+		when(userRepo.findById(anyInt())).thenReturn(Optional.of(user1));
+		assertTrue(userService.deleteUser(anyInt()));
+	}
+	
+	@Test
+	@DisplayName("delete-non-existing-id-test")
+	public void givenNonExistingUserId_whenDeleteUser_returnThrowsUserNotFoundException() throws UserNotFoundException {
+		when(userRepo.findById(anyInt())).thenReturn(Optional.empty());
+		assertThrows(UserNotFoundException.class, ()-> userService.deleteUser(anyInt()));
 	}
 	
 	

@@ -15,11 +15,10 @@ public interface UserService {
 	public User userRegister(User user) throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException, InvalidDateInputException;
 	
 	public List<User> getAllUsers();
+	//getUser
+	//resetUser
 	public User updateUser(User user) throws UserNotFoundException;
-	/*
-	 * getUser
-	public void resetUser();
-	*/
+	public boolean deleteUser(int uid) throws UserNotFoundException;
 	
 	/*
 	public void addBook();
