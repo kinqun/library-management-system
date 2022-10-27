@@ -175,6 +175,19 @@ public class BookControllerTest {
 			
 	}
 	
+	@Test
+	@DisplayName("get-all-books-test")
+	public void given_whenGetAllBooks_returnBooksList() throws Exception {
+		when(this.bookService.getAllBooks()).thenReturn(booksList);
+		mockMvc.perform(get("/api/v1/book")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$[0].bookName").value("Book Name A"))
+			.andExpect(jsonPath("$[1].bookName").value("Book Name B"));
+			
+	}
+	
 	public static String asJsonString(Object obj) {
 		ObjectMapper Obj = new ObjectMapper();
 		String jsonStr = null;

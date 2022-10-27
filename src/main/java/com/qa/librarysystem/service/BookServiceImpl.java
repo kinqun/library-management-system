@@ -1,5 +1,6 @@
 package com.qa.librarysystem.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,11 @@ public class BookServiceImpl implements BookService {
 		}else {
 			return existingBook.get();
 		}
+	}
+
+	@Override
+	public List<Book> getAllBooks() {
+		return this.bookRepo.findAll();
 	}
 
 }

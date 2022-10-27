@@ -1,6 +1,8 @@
 package com.qa.librarysystem.entity;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -53,7 +55,6 @@ public class Book {
 	@Min(1)
 	@Max(2022)
 	private int yearPublished;
-	
 	@Column(name="book_description")
 	@Size(min=2, max=255)
 	private String description;

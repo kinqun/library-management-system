@@ -64,9 +64,9 @@ public class UserControllerTest {
 	@BeforeEach
 	public void setUp() {
 
-		user1 = new User(1001,"Adam","Smith","user_adam", "mypassword1","1999-9-9", "userA@gmail.com" , true, new ArrayList<>() ,new ArrayList<>(),new ArrayList<>()) ;
-		user2 = new User(1002,"Bob", "Joe","user_bob", "mypassword2","2010-5-20", "userB@gmail.com", false, new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
-		user3 = new User(1003,"Charlie", "Ricardo", "user_charlie", "mypassword3", "2001-12-30", "userC@gmail.com", false,  new ArrayList<>(),new ArrayList<>(),new ArrayList<>());
+		user1 = new User(1001,"Adam","Smith","user_adam", "mypassword1","1999-9-9", "userA@gmail.com" , true, new ArrayList<>() ,new ArrayList<>()) ;
+		user2 = new User(1002,"Bob", "Joe","user_bob", "mypassword2","2010-5-20", "userB@gmail.com", false, new ArrayList<>(),new ArrayList<>());
+		user3 = new User(1003,"Charlie", "Ricardo", "user_charlie", "mypassword3", "2001-12-30", "userC@gmail.com", false,  new ArrayList<>(),new ArrayList<>());
 		usersList = Arrays.asList(user1,user2,user3);
 		
 		mockMvc = MockMvcBuilders.standaloneSetup(userController).build();

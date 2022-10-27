@@ -20,20 +20,16 @@ public interface UserService {
 	public User updateUser(User user) throws UserNotFoundException;
 	public boolean deleteUser(int uid) throws UserNotFoundException;
 	
-	/*
-	public void addBook();
-	public void updateBook();
-	public void deleteBook();
-	public void searchBook();
-	public void showAllBooks();
-	
-	public void bookmarkBook();
-	public void getBookmarkedBooks();
+	/*	
 	public void favouriteBook();
 	public void getFavouriteBooks();
-	public void reserveBook();
-	public void getReservedBooks();
-	public void checkoutBook();
-	public void returnBook();
+
+	public void checkinCheckoutHistory();
+	
+	public void getCheckedOutBooks();
+	public void checkInBook();
+	public void checkOutBook();
+	
+	public void checkBookIsAvailable()
 	*/
 }

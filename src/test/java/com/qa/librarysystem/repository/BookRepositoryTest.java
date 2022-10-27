@@ -113,4 +113,15 @@ public class BookRepositoryTest {
 		assertThat(fetchedBook).isEmpty();
 	}
 	
+	@Test
+	@DisplayName("get-all-books")
+	public void given_whenGetAllBooks_returnBooksList() {
+		this.bookRepo.save(book1);
+		this.bookRepo.save(book2);
+		this.bookRepo.save(book3);
+		List<Book> newBookList = this.bookRepo.findAll();
+		assertEquals(3, newBookList.size());
+		assertEquals("Book Name A", newBookList.get(0).getBookName());
+	}
+	
 }
