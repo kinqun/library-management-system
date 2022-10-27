@@ -3,6 +3,7 @@ package com.qa.librarysystem.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.time.format.DateTimeParseException;
@@ -26,6 +27,7 @@ import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
 import com.qa.librarysystem.exceptions.UserInvalidCredentialsException;
+import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.repository.UserRepository;
 import com.qa.librarysystem.utils.Validator;
 
@@ -117,6 +119,21 @@ public class UserServiceImplTest {
 		assertThrows(InvalidDateInputException.class, ()->userService.userRegister(user1));
 	}
 	
+	@Test
+	@DisplayName("update-user-test")
+	public void givenValidUser_whenUpdateUser_returnUpdatedUser() throws UserNotFoundException {
+		when(userRepo.findById(anyInt())).thenReturn(Optional.of(user1));
+		when(userRepo.save(any())).thenReturn(user2);
+		User updatedUser = userService.updateUser(user2);
+		assertEquals("Bob", updatedUser.getFname());
+	}
+	
+	@Test
+	@DisplayName("update-non-existing-user-test")
+	public void givenNonExistingUser_whenUpdateUser_returnThrowsUserNotFoundException() throws UserNotFoundException {
+		when(userRepo.findById(anyInt())).thenReturn(null);
+		assertThrows(UserNotFoundException.class, ()-> userService.updateUser(user1));
+	}
 	
 	
 	

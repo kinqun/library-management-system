@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyInt;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,4 +138,21 @@ public class UserRepositoryTest {
 		assertEquals(3, allUsers.size());
 		assertEquals("Adam", allUsers.get(0).getFname());
 	}
+	
+	@Test
+	@DisplayName("find-by-user-id-test")
+	public void givenValidId_whenFindUserById_returnUser() {
+		userRepo.save(user1);
+		Optional<User> fetchedUser = userRepo.findById(user1.getUid());
+		assertThat(fetchedUser).isNotEmpty();
+		assertEquals("Adam", fetchedUser.get().getFname());
+	}
+	
+	@Test
+	@DisplayName("find-by-user-invalid-id-test")
+	public void givenInValidId_whenFindUserById_returnEmpty() {
+		Optional<User> fetchedUser = userRepo.findById(user1.getUid());
+		assertThat(fetchedUser).isEmpty();
+	}
+		
 }

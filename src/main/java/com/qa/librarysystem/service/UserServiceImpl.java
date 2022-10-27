@@ -11,6 +11,7 @@ import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
 import com.qa.librarysystem.exceptions.UserInvalidCredentialsException;
+import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.repository.BookRepository;
 import com.qa.librarysystem.repository.UserRepository;
 import com.qa.librarysystem.utils.Validator;
@@ -60,6 +61,18 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<User> getAllUsers() {
 		return this.userRepo.findAll();
+	}
+
+	@Override
+	public User updateUser(User user) throws UserNotFoundException {
+		Optional<User> existingUser = this.userRepo.findById(user.getUid());
+		
+		if(existingUser.isEmpty()) {
+			throw new UserNotFoundException();
+		}else {
+			return this.userRepo.save(user);
+		}
+		
 	}
 
 }

@@ -21,6 +21,7 @@ import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
 import com.qa.librarysystem.exceptions.UserInvalidCredentialsException;
+import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.service.UserServiceImpl;
 
 @RestController
@@ -78,5 +79,19 @@ public class UserController {
 		
 		return responseEntity;
 	}
+	
+	@PutMapping("user")
+	public ResponseEntity<?> updateUser(@Valid @RequestBody User user) throws UserNotFoundException {
+		try {
+			User updatedUser = this.userService.updateUser(user);
+			responseEntity = new ResponseEntity<>(updatedUser,HttpStatus.OK);
+		}catch(UserNotFoundException e) {
+			throw e;
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return responseEntity;
+	} 
 	
 }
