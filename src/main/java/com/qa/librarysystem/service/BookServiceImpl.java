@@ -79,4 +79,18 @@ public class BookServiceImpl implements BookService {
 		return booksByGenre;
 	}
 
+	@Override
+	public List<Book> getBooksByRating() {
+		List<Book> booksByRating=  this.bookRepo.findAll();
+		booksByRating.sort((a,b)-> (int)(b.getRating()*10) - (int)(a.getRating()*10));
+		return booksByRating;
+	}
+
+	@Override
+	public List<Book> getBooksByMinRating(int rating) {
+		List<Book> booksByRating=  this.bookRepo.findAll().stream().filter(b->b.getRating() > rating).collect(Collectors.toList());
+		booksByRating.sort((a,b)-> (int)(b.getRating()*10) - (int)(a.getRating()*10));
+		return booksByRating;
+	}
+
 }

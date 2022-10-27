@@ -3,6 +3,7 @@ package com.qa.librarysystem.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -105,6 +106,30 @@ public class BookController {
 	public ResponseEntity<?> getBooksByGenre(@Size(min=2, max=45) @Pattern(regexp="^[a-zA-Z]+([ -])?([a-zA-Z]+)?$") @PathVariable("genre") String genre) {
 		try {
 			List<Book> allBooks = this.bookService.getBooksByGenre(genre);
+			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
+	
+	@GetMapping("/book/rating")
+	public ResponseEntity<?> getBooksByRating() {
+		try {
+			List<Book> allBooks = this.bookService.getBooksByRating();
+			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
+	
+	@GetMapping("/book/rating/{rating}")
+	public ResponseEntity<?> getBooksByMinRating(@Min(0) @Max(5) @PathVariable("rating") int rating) {
+		try {
+			List<Book> allBooks = this.bookService.getBooksByMinRating(rating);
 			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
 			
 		}catch(Exception e) {
