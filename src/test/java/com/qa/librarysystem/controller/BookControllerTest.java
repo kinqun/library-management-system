@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.BookAlreadyExistsException;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.service.BookServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,9 +59,9 @@ public class BookControllerTest {
 	@BeforeEach
 	public void setUp() {
 
-		book1 = new Book(1001,"BookName1","Author1",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
-		book2 = new Book(1002,"BookName2","Author2",2002, "this is a book description 2","sci-fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
-		book3 = new Book(1003,"BookName3","Author3",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
+		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
+		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
+		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
 		booksList = Arrays.asList(book1,book2,book3);
 		
 		mockMvc = MockMvcBuilders.standaloneSetup(bookController).build();
@@ -81,7 +82,7 @@ public class BookControllerTest {
 				.content(asJsonString(book1)))
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isCreated())
-			.andExpect(jsonPath("$.bookName").value("BookName1"));	
+			.andExpect(jsonPath("$.bookName").value("Book Name A"));	
 	}
 	
 	@Test
@@ -95,6 +96,33 @@ public class BookControllerTest {
 			.andExpect(status().isConflict())
 			.andExpect(res->assertEquals("book already exists", res.getResponse().getErrorMessage()))
 			.andExpect(res->assertTrue(res.getResolvedException() instanceof BookAlreadyExistsException));
+			
+	}
+	
+	@Test
+	@DisplayName("update-book-test")
+	public void givenValidBook_whenUpdateBook_returnUpdatedBook() throws Exception {
+		when(this.bookService.updateBook(any())).thenReturn(book1);
+		mockMvc.perform(put("/api/v1/book")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(book1)))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.bookName").value("Book Name A"));
+			
+	}
+	
+	@Test
+	@DisplayName("update-invalid-book-test")
+	public void giveninValidBook_whenUpdateBook_returnThrowsBookNotFoundException() throws Exception {
+		when(this.bookService.updateBook(any())).thenThrow(new BookNotFoundException());
+		mockMvc.perform(put("/api/v1/book")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(book1)))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isNotFound())
+			.andExpect(res->assertEquals("book doesnt exist", res.getResponse().getErrorMessage()))
+			.andExpect(res->assertTrue(res.getResolvedException() instanceof BookNotFoundException));
 			
 	}
 	

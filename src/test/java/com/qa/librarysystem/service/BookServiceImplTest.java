@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import com.qa.librarysystem.controller.BookController;
 import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.exceptions.BookAlreadyExistsException;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.repository.BookRepository;
 @ExtendWith(MockitoExtension.class)
 public class BookServiceImplTest {
@@ -46,9 +47,9 @@ public class BookServiceImplTest {
 	@BeforeEach
 	public void setUp() {
 
-		book1 = new Book(1001,"BookName1","Author1",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
-		book2 = new Book(1002,"BookName2","Author2",2002, "this is a book description 2","sci-fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
-		book3 = new Book(1003,"BookName3","Author3",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
+		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
+		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
+		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
 		booksList = Arrays.asList(book1,book2,book3);
 		
 	}
@@ -63,16 +64,44 @@ public class BookServiceImplTest {
 	@DisplayName("add-book-test")
 	public void givenValidBook_whenAddBook_returnAddedBook() throws BookAlreadyExistsException {
 		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
+		when(this.bookRepo.findByAuthorAndName(any(), any())).thenReturn(null);
 		when(this.bookRepo.save(any())).thenReturn(book1);
 		Book addedBook = this.bookService.addBook(book1);
 		assertNotNull(addedBook);
-		assertEquals("BookName1", addedBook.getBookName());
+		assertEquals("Book Name A", addedBook.getBookName());
 	}
 	
 	@Test
-	@DisplayName("add-invalid-book-test")
-	public void givenInvalidBook_whenAddBook_returnThrowsBookAleadyExistsException() throws BookAlreadyExistsException {
+	@DisplayName("add-existing-id-book-test")
+	public void givenExistingBookId_whenAddBook_returnThrowsBookAleadyExistsException() throws BookAlreadyExistsException {
 		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
+		when(this.bookRepo.findByAuthorAndName(any(), any())).thenReturn(null);
 		assertThrows(BookAlreadyExistsException.class, ()->this.bookService.addBook(book1));
 	}
+	
+	@Test
+	@DisplayName("add-existing-author-and-name-book-test")
+	public void givenExistingBookAuthorAndName_whenAddBook_returnThrowsBookAleadyExistsException() throws BookAlreadyExistsException {
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
+		when(this.bookRepo.findByAuthorAndName(any(), any())).thenReturn(book1);
+		assertThrows(BookAlreadyExistsException.class, ()->this.bookService.addBook(book1));
+	}
+	
+	@Test
+	@DisplayName("update-book-test")
+	public void givenValidBookId_whenUpdateBook_returnUpdatedBook() throws BookNotFoundException {
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
+		when(this.bookRepo.save(any())).thenReturn(book1);
+		Book updatedBook = this.bookService.updateBook(book1);
+		assertNotNull(updatedBook);
+		assertEquals("Book Name A", updatedBook.getBookName());
+	}
+	
+	@Test
+	@DisplayName("update-nonexisting-book-test")
+	public void givenNonExistingBookId_whenUpdateBook_returnThrowsBookNotFoundException() throws BookNotFoundException {
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
+		assertThrows(BookNotFoundException.class, ()->bookService.updateBook(book1));
+	}
+	
 }
