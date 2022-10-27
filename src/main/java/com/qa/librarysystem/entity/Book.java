@@ -62,7 +62,7 @@ public class Book {
 	@Column(name="book_genre")
 	@NotNull
 	@Size(min=2, max=25)
-	@Pattern(regexp="^[a-zA-Z,]+( [a-zA-Z,]+)?$")
+	@Pattern(regexp="^[a-zA-Z]+([ -])?([a-zA-Z]+)?$")
 	private String genre;
 	
 	@Column(name="book_rating")

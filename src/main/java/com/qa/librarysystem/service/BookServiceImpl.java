@@ -2,6 +2,7 @@ package com.qa.librarysystem.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,13 @@ public class BookServiceImpl implements BookService {
 	@Override
 	public List<Book> getAllBooks() {
 		return this.bookRepo.findAll();
+	}
+
+	@Override
+	public List<Book> getBooksByGenre(String genre) {
+		List<Book> booksByGenre=  this.bookRepo.findAll().stream().filter(b->b.getGenre().equals(genre)).collect(Collectors.toList());
+		booksByGenre.sort((a,b)-> a.getBookName().compareTo(b.getBookName()));
+		return booksByGenre;
 	}
 
 }

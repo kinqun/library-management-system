@@ -121,6 +121,7 @@ public class BookRepositoryTest {
 		this.bookRepo.save(book3);
 		List<Book> newBookList = this.bookRepo.findAll();
 		assertEquals(3, newBookList.size());
+		assertEquals("Book Name B", newBookList.get(1).getBookName());
 		assertEquals("Book Name A", newBookList.get(0).getBookName());
 	}
 	
