@@ -20,6 +20,6 @@ public interface BookService {
 	public List<Book> getBooksByGenre(String genre);
 	public List<Book> getBooksByMinRating(int rating);
 	public List<Book> getBooksByRating();
-//	public List<Book> getBooksByAuthor(String author);
+	public List<Book> getBooksByAuthor(String author);
 	
 }
