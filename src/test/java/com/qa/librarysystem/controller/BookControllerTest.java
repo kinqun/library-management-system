@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -197,6 +199,19 @@ public class BookControllerTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$[0].bookName").value("Book Name A"));
+			
+	}
+	
+	@Test
+	@DisplayName("get-all-books-by-min-rating-sorted-test")
+	public void givenMinRating_whenGetAllBooksByRating_returnBooksListFilteredByMinRatingAndSortedByRating() throws Exception {
+		booksList = booksList.stream().filter(b->b.getRating()> 2).collect(Collectors.toList());
+		when(this.bookService.getBooksByGenre(any())).thenReturn(booksList);
+		mockMvc.perform(get("/api/v1/book/genre/{rating}","2")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(2));
 			
 	}
 	
