@@ -35,12 +35,12 @@ public class Book {
 	@SequenceGenerator(name="bookIdSeq", initialValue = 1001, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "bookIdSeq")
 	@Column(name="book_id")
-	private int bid;
+	private int id;
 	
 	@Column(name="book_name")
 	@NotNull
 	@Size(min=2, message="book name must be at least 2")
-	@Pattern(regexp="^[\\w:,\\.]+$")
+	@Pattern(regexp="^[\\w:,\\. ]+$")
 	private String bookName;
 	
 	@Column(name="book_author")

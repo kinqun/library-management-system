@@ -2,10 +2,12 @@ package com.qa.librarysystem.repository;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,9 +45,9 @@ public class BookRepositoryTest {
 	@BeforeEach
 	public void setUp() {
 
-		book1 = new Book(1001,"BookNameA","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
-		book2 = new Book(1002,"BookNameB","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
-		book3 = new Book(1003,"BookNameC","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
+		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
+		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
+		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
 		booksList = Arrays.asList(book1,book2,book3);
 		
 	}
@@ -62,7 +64,42 @@ public class BookRepositoryTest {
 	public void givenValidBook_whenAddBook_returnAddedBook() {
 		Book addedBook = this.bookRepo.save(book1);
 		assertNotNull(addedBook);
-		assertEquals("BookNameA", addedBook.getBookName());
+		assertEquals("Book Name A", addedBook.getBookName());
 		
+	}
+	
+	@Test
+	@DisplayName("find-book-by-id-test")
+	public void givenValidBookId_whenFindBookById_returnBook() {
+		this.bookRepo.save(book1);
+		Optional<Book> fetchedBook = this.bookRepo.findById(1001);
+		assertEquals("Book Name A", fetchedBook.get().getBookName());
+	}
+	
+	@Test
+	@DisplayName("find-book-by-author-and-name")
+	public void givenValidBooknameAndValidAuthor_whenFindBookByAuthorAndName_returnBook() {
+		this.bookRepo.save(book1);
+		
+		Book fetchedBook = this.bookRepo.findByAuthorAndName("Book Name A", "A Author");
+		assertEquals("Book Name A", fetchedBook.getBookName());
+	}
+	
+	@Test
+	@DisplayName("find-book-by-invalid-author-and-valid-name")
+	public void givenValidBooknameAndInvalidAuthor_whenFindBookByAuthorAndName_returnNull() {
+		this.bookRepo.save(book1);
+		
+		Book fetchedBook = this.bookRepo.findByAuthorAndName("Book Name A", "Invalid Author");
+		assertNull(fetchedBook);
+	}
+	
+	@Test
+	@DisplayName("find-book-by-valid-author-and-invalid-name")
+	public void givenInvalidBooknameAndValidAuthor_whenFindBookByAuthorAndName_returnNull() {
+		this.bookRepo.save(book1);
+		
+		Book fetchedBook = this.bookRepo.findByAuthorAndName("invalid book Name A", "A Author");
+		assertNull(fetchedBook);
 	}
 }

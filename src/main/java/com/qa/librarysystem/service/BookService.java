@@ -4,11 +4,12 @@ import java.util.List;
 
 import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.exceptions.BookAlreadyExistsException;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 
 public interface BookService {
 
 	public Book addBook(Book book) throws BookAlreadyExistsException;
-	//public Book updateBook(Book book);
+	public Book updateBook(Book book) throws BookNotFoundException;
 //	public boolean deleteBook(Book book);
 //	public Book getBookById(int id);
 	
