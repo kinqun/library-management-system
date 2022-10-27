@@ -15,8 +15,9 @@ public interface UserService {
 	public User userRegister(User user) throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException, InvalidDateInputException;
 	
 	public List<User> getAllUsers();
+	public User updateUser(User user) throws UserNotFoundException;
 	/*
-	public void updateUser();
+	 * getUser
 	public void resetUser();
 	*/
 	

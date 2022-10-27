@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -37,6 +38,7 @@ import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
 import com.qa.librarysystem.exceptions.UserInvalidCredentialsException;
+import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.service.UserServiceImpl;
 
 
@@ -170,6 +172,32 @@ public class UserControllerTest {
 		
 	}
 	
+	@Test
+	@DisplayName("update-user-test")
+	public void givenValidUser_whenUpdateUser_returnUpdatedUser() throws Exception {
+		when(userService.updateUser(any())).thenReturn(user1);
+		mockMvc.perform(put("/api/v1/user")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(user1)))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.fname").value("Adam"));
+		
+	}
+	
+	@Test
+	@DisplayName("update-non-existing-user-test")
+	public void givenNotExistingUser_whenUpdateUser_returnThrowsUserNotFoundException() throws Exception {
+		when(userService.updateUser(any())).thenThrow(new UserNotFoundException());
+		mockMvc.perform(put("/api/v1/user")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(user1)))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isNotFound())
+			.andExpect(res->assertEquals("No existing user found",res.getResponse().getErrorMessage()))
+			.andExpect(res->assertTrue(res.getResolvedException() instanceof UserNotFoundException));
+		
+	}
 	
 	
 	public static String asJsonString(Object obj) {
