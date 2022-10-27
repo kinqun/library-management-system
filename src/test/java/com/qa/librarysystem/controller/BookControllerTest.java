@@ -188,6 +188,18 @@ public class BookControllerTest {
 			
 	}
 	
+	@Test
+	@DisplayName("get-all-books-by-genre-sorted-test")
+	public void given_whenGetAllBooksByGenre_returnBooksListSortedByName() throws Exception {
+		when(this.bookService.getBooksByGenre(any())).thenReturn(booksList);
+		mockMvc.perform(get("/api/v1/book/genre/{genre}","sci fi")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$[0].bookName").value("Book Name A"));
+			
+	}
+	
 	public static String asJsonString(Object obj) {
 		ObjectMapper Obj = new ObjectMapper();
 		String jsonStr = null;

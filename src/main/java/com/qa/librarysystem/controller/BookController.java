@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -91,6 +93,18 @@ public class BookController {
 	public ResponseEntity<?> getAllBooks() {
 		try {
 			List<Book> allBooks = this.bookService.getAllBooks();
+			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
+			
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
+	
+	@GetMapping("/book/genre/{genre}")
+	public ResponseEntity<?> getBooksByGenre(@Size(min=2, max=45) @Pattern(regexp="^[a-zA-Z]+([ -])?([a-zA-Z]+)?$") @PathVariable("genre") String genre) {
+		try {
+			List<Book> allBooks = this.bookService.getBooksByGenre(genre);
 			responseEntity = new ResponseEntity<>(allBooks, HttpStatus.OK);
 			
 		}catch(Exception e) {
