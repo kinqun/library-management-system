@@ -70,4 +70,18 @@ public class BookController {
 		}
 		return responseEntity;
 	} 
+	
+	@GetMapping("/book/{id}")
+	public ResponseEntity<?> getBookById(@Min(0) @PathVariable("id") int id) throws BookNotFoundException{
+		try {
+			Book fetchedBook = this.bookService.getBookById(id);
+			responseEntity = new ResponseEntity<>(fetchedBook, HttpStatus.OK);
+			
+		}catch(BookNotFoundException e) {
+			throw e;
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
 }

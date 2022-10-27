@@ -49,9 +49,9 @@ public class BookServiceImplTest {
 	@BeforeEach
 	public void setUp() {
 
-		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
-		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
-		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
+		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5);
+		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3);
+		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4);
 		booksList = Arrays.asList(book1,book2,book3);
 		
 	}
@@ -119,6 +119,22 @@ public class BookServiceImplTest {
 	public void givenNonExistingBookId_whenDeleteBook_returnThrowsBookNotFoundException() throws BookNotFoundException {		
 		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
 		assertThrows(BookNotFoundException.class, ()->this.bookService.deleteBook(1001));
+	}
+	
+	@Test
+	@DisplayName("get-book-by-id-test")
+	public void givenExistingBookId_whenGetBookById_returnBook() throws BookNotFoundException {		
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
+		Book book = this.bookService.getBookById(anyInt());
+		assertNotNull(book);
+		assertEquals("Book Name A", book.getBookName());
+	}
+	
+	@Test
+	@DisplayName("get-book-by-non-existing-id-test")
+	public void givenNonExistingBookId_whenGetBookById_returnThrowsBookNotFoundException() throws BookNotFoundException {		
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
+		assertThrows(BookNotFoundException.class, ()->this.bookService.getBookById(anyInt()));
 	}
 	
 }

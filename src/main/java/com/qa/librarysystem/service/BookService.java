@@ -11,7 +11,7 @@ public interface BookService {
 	public Book addBook(Book book) throws BookAlreadyExistsException;
 	public Book updateBook(Book book) throws BookNotFoundException;
 	public boolean deleteBook(int id) throws BookNotFoundException;
-//	public Book getBookById(int id);
+	public Book getBookById(int id) throws BookNotFoundException;
 	
 //	public List<Book> getAllBooks();
 //	public List<Book> getBooksByName(String name);
