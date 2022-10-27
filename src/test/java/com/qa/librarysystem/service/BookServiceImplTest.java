@@ -1,8 +1,10 @@
 package com.qa.librarysystem.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -102,6 +104,21 @@ public class BookServiceImplTest {
 	public void givenNonExistingBookId_whenUpdateBook_returnThrowsBookNotFoundException() throws BookNotFoundException {
 		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
 		assertThrows(BookNotFoundException.class, ()->bookService.updateBook(book1));
+	}
+	
+	@Test
+	@DisplayName("delete-book-test")
+	public void givenExistingBookId_whenDeleteBook_returnTrue() throws BookNotFoundException {		
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
+		boolean deletedBook = this.bookService.deleteBook(book1.getId());
+		assertTrue(deletedBook);
+	}
+	
+	@Test
+	@DisplayName("delete-non-existing-book-test")
+	public void givenNonExistingBookId_whenDeleteBook_returnThrowsBookNotFoundException() throws BookNotFoundException {		
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
+		assertThrows(BookNotFoundException.class, ()->this.bookService.deleteBook(1001));
 	}
 	
 }

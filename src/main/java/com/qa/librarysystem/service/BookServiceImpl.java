@@ -41,4 +41,18 @@ public class BookServiceImpl implements BookService {
 		}
 	}
 
+	@Override
+	public boolean deleteBook(int id) throws BookNotFoundException {
+		boolean isDeleted = false;
+		Optional<Book> existingBook = this.bookRepo.findById(id);
+		
+		if(existingBook.isEmpty()) {
+			throw new BookNotFoundException();
+		}else {
+			this.bookRepo.deleteById(id);
+			isDeleted = true;
+		}
+		return isDeleted;
+	}
+
 }

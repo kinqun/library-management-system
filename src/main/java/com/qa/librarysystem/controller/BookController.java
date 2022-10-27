@@ -1,11 +1,14 @@
 package com.qa.librarysystem.controller;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,4 +55,19 @@ public class BookController {
 		}
 		return responseEntity;
 	}
+	
+	@DeleteMapping("/book/{id}")
+	public ResponseEntity<?> deleteBook(@Min(0) @PathVariable("id") int id) throws BookNotFoundException{
+		try {
+			boolean isDeleted = this.bookService.deleteBook(id);
+			if(isDeleted) {
+				responseEntity = new ResponseEntity<>("book is deleted", HttpStatus.OK);
+			}
+		}catch(BookNotFoundException e) {
+			throw e;
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
 }
