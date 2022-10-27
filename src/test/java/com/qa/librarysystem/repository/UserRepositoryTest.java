@@ -125,4 +125,16 @@ public class UserRepositoryTest {
 		assertEquals("Adam", savedUser.getFname());
 		
 	}
+	
+	@Test
+	@DisplayName("get-all-users-test")
+	public void given_whenGetAllUsers_returnUsersList() {
+		userRepo.save(user1);
+		userRepo.save(user2);
+		userRepo.save(user3);
+		List<User> allUsers = userRepo.findAll();
+		
+		assertEquals(3, allUsers.size());
+		assertEquals("Adam", allUsers.get(0).getFname());
+	}
 }

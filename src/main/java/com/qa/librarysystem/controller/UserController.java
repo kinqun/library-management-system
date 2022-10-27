@@ -1,5 +1,7 @@
 package com.qa.librarysystem.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 
@@ -58,6 +60,18 @@ public class UserController {
 			throw e;
 		}catch(InvalidDateInputException e) {
 			throw e;
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return responseEntity;
+	}
+	
+	@GetMapping("user")
+	public ResponseEntity<?> getAllUsers() throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException, InvalidDateInputException{
+		try {
+			List<User> allUsers = this.userService.getAllUsers();
+			responseEntity = new ResponseEntity<>(allUsers,HttpStatus.OK);
 		}catch(Exception e) {
 			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
