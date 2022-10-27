@@ -60,9 +60,9 @@ public class BookControllerTest {
 	@BeforeEach
 	public void setUp() {
 
-		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5,new ArrayList<>());
-		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3,new ArrayList<>());
-		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4,new ArrayList<>());
+		book1 = new Book(1001,"Book Name A","A Author",2001, "this is a book description 1","cooking", 3.4f , (byte)5, (byte)5);
+		book2 = new Book(1002,"Book Name B","B Author",2002, "this is a book description 2","sci fi", 1.5f , (byte)3, (byte)3);
+		book3 = new Book(1003,"Book Name C","C Author",2003, "this is a book description 3","motivational", 4.4f , (byte)4, (byte)4);
 		booksList = Arrays.asList(book1,book2,book3);
 		
 		mockMvc = MockMvcBuilders.standaloneSetup(bookController).build();
@@ -140,10 +140,34 @@ public class BookControllerTest {
 	}
 	
 	@Test
-	@DisplayName("delete-book-test")
+	@DisplayName("delete-non-existing-book-test")
 	public void givenNonExistingBookId_whenDeleteBook_returnThrowsBookNotFoundException() throws Exception {
 		when(this.bookService.deleteBook(anyInt())).thenThrow(new BookNotFoundException());
 		mockMvc.perform(delete("/api/v1/book/{id}","1001")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isNotFound())
+			.andExpect(res->assertTrue(res.getResolvedException() instanceof BookNotFoundException));
+			
+	}
+	
+	@Test
+	@DisplayName("get-book-by-id-test")
+	public void givenExistingBookId_whenGetBookById_returnBook() throws Exception {
+		when(this.bookService.getBookById(anyInt())).thenReturn(book1);
+		mockMvc.perform(get("/api/v1/book/{id}","1001")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.bookName").value("Book Name A"));
+			
+	}
+	
+	@Test
+	@DisplayName("get-book-by-non-existing-id-test")
+	public void givenNonExistingBookId_whenGetBookById_returnThrowsBookNotFoundException() throws Exception {
+		when(this.bookService.getBookById(anyInt())).thenThrow(new BookNotFoundException());
+		mockMvc.perform(get("/api/v1/book/{id}","1001")
 				.accept(MediaType.APPLICATION_JSON))
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isNotFound())

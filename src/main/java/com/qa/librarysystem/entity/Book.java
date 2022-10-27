@@ -79,7 +79,5 @@ public class Book {
 	@Min(0)
 	private byte bookAvailableQty;
 	
-	@Column(name="book_comments")
-	private ArrayList<String> comments;
 	
 }

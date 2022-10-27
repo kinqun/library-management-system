@@ -55,4 +55,14 @@ public class BookServiceImpl implements BookService {
 		return isDeleted;
 	}
 
+	@Override
+	public Book getBookById(int id) throws BookNotFoundException {
+		Optional<Book> existingBook = this.bookRepo.findById(id);
+		if(existingBook.isEmpty()) {
+			throw new BookNotFoundException();
+		}else {
+			return existingBook.get();
+		}
+	}
+
 }
