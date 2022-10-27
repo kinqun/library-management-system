@@ -1,5 +1,6 @@
 package com.qa.librarysystem.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -77,7 +78,7 @@ public class BookRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("find-book-by-author-and-name")
+	@DisplayName("find-book-by-author-and-name-test")
 	public void givenValidBooknameAndValidAuthor_whenFindBookByAuthorAndName_returnBook() {
 		this.bookRepo.save(book1);
 		
@@ -86,7 +87,7 @@ public class BookRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("find-book-by-invalid-author-and-valid-name")
+	@DisplayName("find-book-by-invalid-author-and-valid-name-test")
 	public void givenValidBooknameAndInvalidAuthor_whenFindBookByAuthorAndName_returnNull() {
 		this.bookRepo.save(book1);
 		
@@ -95,11 +96,21 @@ public class BookRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("find-book-by-valid-author-and-invalid-name")
+	@DisplayName("find-book-by-valid-author-and-invalid-name-test")
 	public void givenInvalidBooknameAndValidAuthor_whenFindBookByAuthorAndName_returnNull() {
 		this.bookRepo.save(book1);
 		
 		Book fetchedBook = this.bookRepo.findByAuthorAndName("invalid book Name A", "A Author");
 		assertNull(fetchedBook);
 	}
+	
+	@Test
+	@DisplayName("delete-book-test")
+	public void givenExistingBookId_whenDeleteBook_return() {
+		this.bookRepo.save(book1);
+		this.bookRepo.deleteById(1001);
+		Optional<Book> fetchedBook = this.bookRepo.findById(1001);
+		assertThat(fetchedBook).isEmpty();
+	}
+	
 }

@@ -3,6 +3,7 @@ package com.qa.librarysystem.controller;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -122,6 +123,30 @@ public class BookControllerTest {
 			.andDo(MockMvcResultHandlers.print())
 			.andExpect(status().isNotFound())
 			.andExpect(res->assertEquals("book doesnt exist", res.getResponse().getErrorMessage()))
+			.andExpect(res->assertTrue(res.getResolvedException() instanceof BookNotFoundException));
+			
+	}
+	
+	@Test
+	@DisplayName("delete-book-test")
+	public void givenExistingBookId_whenDeleteBook_returnIsDeletedString() throws Exception {
+		when(this.bookService.deleteBook(anyInt())).thenReturn(true);
+		mockMvc.perform(delete("/api/v1/book/{id}","1001")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(res->assertEquals("book is deleted", res.getResponse().getContentAsString()));
+			
+	}
+	
+	@Test
+	@DisplayName("delete-book-test")
+	public void givenNonExistingBookId_whenDeleteBook_returnThrowsBookNotFoundException() throws Exception {
+		when(this.bookService.deleteBook(anyInt())).thenThrow(new BookNotFoundException());
+		mockMvc.perform(delete("/api/v1/book/{id}","1001")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isNotFound())
 			.andExpect(res->assertTrue(res.getResolvedException() instanceof BookNotFoundException));
 			
 	}
