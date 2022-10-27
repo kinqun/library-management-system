@@ -75,4 +75,19 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
+	@Override
+	public boolean deleteUser(int uid) throws UserNotFoundException {
+		boolean isDeleted = false;
+		Optional<User> existingUser = this.userRepo.findById(uid);
+		
+		if(!existingUser.isPresent()) {
+			throw new UserNotFoundException();
+		}else {
+			this.userRepo.deleteById(uid);
+			isDeleted = true;
+		}
+		return isDeleted;
+		
+	}
+
 }

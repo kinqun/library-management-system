@@ -3,11 +3,13 @@ package com.qa.librarysystem.controller;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,6 +90,23 @@ public class UserController {
 		}catch(UserNotFoundException e) {
 			throw e;
 		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return responseEntity;
+	} 
+	
+	@DeleteMapping("user/{id}")
+	public ResponseEntity<?> deleteUser(@Min(0) @PathVariable("id") int uid) throws UserNotFoundException {
+		try {
+			boolean isDeleted = this.userService.deleteUser(uid);
+			if(isDeleted == true) {
+				responseEntity = new ResponseEntity<>("user is deleted",HttpStatus.OK);
+			}
+		}catch(UserNotFoundException e) {
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
 			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		

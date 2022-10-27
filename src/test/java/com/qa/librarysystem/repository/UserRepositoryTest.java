@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.qa.librarysystem.entity.User;
@@ -154,5 +156,20 @@ public class UserRepositoryTest {
 		Optional<User> fetchedUser = userRepo.findById(user1.getUid());
 		assertThat(fetchedUser).isEmpty();
 	}
+	
+	@Test
+	@DisplayName("delete-user-by-id-test")
+	public void givenValidId_whenDeleteUserById_returnEmpty() {
+		userRepo.save(user1);
+		userRepo.deleteById(1001);
+		Optional<User> deletedUser = userRepo.findById(1001);
+		assertThat(deletedUser).isEmpty();
+	}
+	@Test
+	@DisplayName("delete-user-by-invalid-id-test")
+	public void givenInValidId_whenDeleteUserById_returnDeleted() {
+		assertThrows(EmptyResultDataAccessException.class, ()-> userRepo.deleteById(1001));
+	}
+	
 		
 }
