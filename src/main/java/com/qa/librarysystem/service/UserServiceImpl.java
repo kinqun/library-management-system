@@ -1,5 +1,6 @@
 package com.qa.librarysystem.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,11 @@ public class UserServiceImpl implements UserService {
 		}else {
 			return this.userRepo.save(user);
 		}
+	}
+
+	@Override
+	public List<User> getAllUsers() {
+		return this.userRepo.findAll();
 	}
 
 }

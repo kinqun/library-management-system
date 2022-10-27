@@ -1,5 +1,7 @@
 package com.qa.librarysystem.service;
 
+import java.util.List;
+
 import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
@@ -11,12 +13,11 @@ public interface UserService {
 	//login/auths
 	public User userLogin(String username, String pw) throws UserInvalidCredentialsException;
 	public User userRegister(User user) throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException, InvalidDateInputException;
+	
+	public List<User> getAllUsers();
 	/*
-	public void getUser();
-	public void deleteUser();
 	public void updateUser();
 	public void resetUser();
-	public void showAllUsers();
 	*/
 	
 	/*

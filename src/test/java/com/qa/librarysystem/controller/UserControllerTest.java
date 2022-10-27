@@ -159,6 +159,16 @@ public class UserControllerTest {
 				.andExpect(res->assertTrue(res.getResolvedException() instanceof InvalidDateInputException));
 	}
 	
+	@Test
+	@DisplayName("get-all-users-test")
+	public void given_whenGetAllUsers_returnUsersList() throws Exception {
+		when(userService.getAllUsers()).thenReturn(usersList);
+		mockMvc.perform(get("/api/v1/user").accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$[0].fname").value("Adam"));
+		
+	}
 	
 	
 	
