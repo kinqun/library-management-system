@@ -2,6 +2,7 @@ package com.qa.librarysystem.service;
 
 import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
+import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
 import com.qa.librarysystem.exceptions.UserInvalidCredentialsException;
 import com.qa.librarysystem.exceptions.UserNotFoundException;
@@ -9,7 +10,7 @@ import com.qa.librarysystem.exceptions.UserNotFoundException;
 public interface UserService {
 	//login/auths
 	public User userLogin(String username, String pw) throws UserInvalidCredentialsException;
-	public User userRegister(User user) throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException;
+	public User userRegister(User user) throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException, InvalidDateInputException;
 	/*
 	public void getUser();
 	public void deleteUser();
