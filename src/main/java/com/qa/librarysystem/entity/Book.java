@@ -1,5 +1,6 @@
 package com.qa.librarysystem.entity;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +32,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="library_books")
-public class Book {
+public class Book implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@SequenceGenerator(name="bookIdSeq", initialValue = 1001, allocationSize = 1)
@@ -70,10 +76,10 @@ public class Book {
 	@Max(5)
 	private float rating;
 	
-	@Column(name="book_quantity_instock")
+	@Column(name="book_quantity_holding")
 	@NotNull
 	@Min(0)
-	private byte bookInstockQty;
+	private byte bookHoldingQty;
 	
 	@Column(name="book_quantity_available")
 	@NotNull

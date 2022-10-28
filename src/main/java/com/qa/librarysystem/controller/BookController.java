@@ -149,4 +149,16 @@ public class BookController {
 		}
 		return responseEntity;
 	} 
+	
+	@GetMapping("/book/bookname/{name}")
+	public ResponseEntity<?> getBooksByName(@Pattern(regexp="^[\\w:,\\. ]+$") @Size(min=2, max=45) @PathVariable("name") String bookname) {
+		try {
+			List<Book> allBooksByName = this.bookService.getBooksByName(bookname);
+			responseEntity = new ResponseEntity<>(allBooksByName, HttpStatus.OK);
+			
+		}catch(Exception e) {
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return responseEntity;
+	} 
 }

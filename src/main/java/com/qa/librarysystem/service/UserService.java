@@ -15,8 +15,6 @@ public interface UserService {
 	public User userRegister(User user) throws UserAlreadyExistingExcecption, EmailAlreadyRegisteredException, InvalidDateInputException;
 	
 	public List<User> getAllUsers();
-	//getUser
-	//resetUser
 	public User updateUser(User user) throws UserNotFoundException;
 	public boolean deleteUser(int uid) throws UserNotFoundException;
 	
@@ -27,7 +25,7 @@ public interface UserService {
 	public void checkinCheckoutHistory();
 	
 	public void getCheckedOutBooks();
-	public void checkInBook();
+	public void returnBook();
 	public void checkOutBook();
 	
 	public void checkBookIsAvailable()

@@ -95,9 +95,16 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<Book> getBooksByAuthor(String author) {
-		List<Book> booksByAuthor=  this.bookRepo.findAll().stream().filter(b->b.getAuthorName().equals(author)).collect(Collectors.toList());
+		List<Book> booksByAuthor=  this.bookRepo.findAll().stream().filter(b->b.getAuthorName().matches("(?i)(.*)" + author + "(.*)")).collect(Collectors.toList());
 		booksByAuthor.sort((a,b)-> a.getBookName().compareTo(b.getBookName()));
 		return booksByAuthor;
+	}
+
+	@Override
+	public List<Book> getBooksByName(String name) {
+		List<Book> booksByName=  this.bookRepo.findAll().stream().filter(b->b.getBookName().matches("(?i)(.*)" + name +"(.*)")).collect(Collectors.toList());
+		booksByName.sort((a,b)-> a.getBookName().compareTo(b.getBookName()));
+		return booksByName;
 	}
 
 }

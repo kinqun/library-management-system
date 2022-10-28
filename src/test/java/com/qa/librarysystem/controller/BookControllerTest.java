@@ -229,6 +229,20 @@ public class BookControllerTest {
 			
 	}
 	
+	@Test
+	@DisplayName("get-all-books-by-bookname-test")
+	public void givenBookName_whenGetAllBooksByBookName_returnBooksListFilteredBookName() throws Exception {
+		booksList = booksList.stream().filter(b->b.getBookName().equals("Book Name B")).collect(Collectors.toList());
+		when(this.bookService.getBooksByName(any())).thenReturn(booksList);
+		mockMvc.perform(get("/api/v1/book/bookname/{name}","Book Name B")
+				.accept(MediaType.APPLICATION_JSON))
+			.andDo(MockMvcResultHandlers.print())
+			.andExpect(status().isOk())
+			.andExpect(MockMvcResultMatchers.jsonPath("$.length()").value(1))
+			.andExpect(jsonPath("$[0].bookName").value("Book Name B"));
+			
+	}
+	
 	public static String asJsonString(Object obj) {
 		ObjectMapper Obj = new ObjectMapper();
 		String jsonStr = null;

@@ -1,5 +1,6 @@
 package com.qa.librarysystem.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,8 +11,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.AssertFalse;
@@ -20,7 +23,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
+import javax.persistence.CascadeType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -37,8 +40,13 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name="library_users")
-public class User {
+public class User implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@SequenceGenerator(name="userIdSeq", initialValue = 1001, allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "userIdSeq")
@@ -80,20 +88,13 @@ public class User {
 	private String email;
 	
 	@Column(name="user_isAdmin")
-	//@AssertFalse
 	private boolean userIsAdmin;
 	
 	@Column(name="user_books_borrowed")
-	private ArrayList<Book> borrowedBooks;
+	private ArrayList<Integer> borrowedBooks;
 	
 	@Column(name="user_books_favourited")
-	/*
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinTable(name="favourited_books",joinColumns = {
-			@JoinColumn(name="user_books_favourited", referencedColumnName = "user_books_favourited")
-	})
-	*/
-	private ArrayList<Book> favouriteBooks;
+	private ArrayList<Integer> favouriteBooks;
 	
 	
 }
