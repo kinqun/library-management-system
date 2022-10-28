@@ -1,5 +1,6 @@
 package com.qa.librarysystem.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -18,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.entity.User;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
@@ -112,5 +115,41 @@ public class UserController {
 		
 		return responseEntity;
 	} 
+	
+	@PutMapping("user/fav-books/{bid}/{uid}")
+	public ResponseEntity<?> addFavouriteBook(@Min(0) @PathVariable("bid") int bid, @Min(0) @PathVariable("uid") int uid) throws BookNotFoundException, UserNotFoundException {
+		try {
+			User updatedUserWithFavBook= this.userService.addFavouriteBook(bid, uid);
+			responseEntity = new ResponseEntity<>(updatedUserWithFavBook,HttpStatus.OK);
+			
+		}catch(UserNotFoundException e) {
+			throw e;
+		}catch(BookNotFoundException e) {
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return responseEntity;
+	} 
+	
+	@GetMapping("user/fav-books/{id}")
+	public ResponseEntity<?> getUsersFavouriteBooks(@Min(0) @PathVariable("id") int uid) throws UserNotFoundException {
+		try {
+			List<Book> favBooksList= this.userService.getUsersFavouriteBooks(uid);
+			responseEntity = new ResponseEntity<>(favBooksList,HttpStatus.OK);
+			
+		}catch(UserNotFoundException e) {
+			throw e;
+		}catch(Exception e) {
+			e.printStackTrace();
+			responseEntity = new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		return responseEntity;
+	} 
+	
+	
 	
 }

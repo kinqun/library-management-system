@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.entity.BookIssue;
 import com.qa.librarysystem.entity.User;
+import com.qa.librarysystem.exceptions.BookIssueNotFoundException;
 import com.qa.librarysystem.exceptions.BookNotAvailableException;
 import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.exceptions.UserAlreadyCheckedOutBookException;
@@ -105,6 +107,45 @@ public class BookIssueServiceImpl implements BookIssureService {
 			throw new UserNotFoundException();
 		}
 		return this.bookIssueRepo.save(bookIssue);
+	}
+
+	@Override
+	public List<BookIssue> getAllBookIssues() {
+		return this.bookIssueRepo.findAll();
+	}
+
+	@Override
+	public List<BookIssue> getUserCheckedOutBooks(int id) {
+		return this.bookIssueRepo.findAll().stream().filter(bi->bi.getUid() == id && bi.getReturnedDate() == null).collect(Collectors.toList());
+	}
+
+	@Override
+	public boolean deleteBookIssue(int id) throws BookIssueNotFoundException {
+		Optional<BookIssue> existingBookIssue = this.bookIssueRepo.findById(id);
+		boolean isDeleted = false;
+		if(!existingBookIssue.isPresent()) {
+			throw new BookIssueNotFoundException();
+		}else { 
+			this.bookIssueRepo.deleteById(id);
+			isDeleted = true;
+		}
+		return isDeleted;
+	}
+
+	@Override
+	public BookIssue updateBookIssue(BookIssue bookIssue) throws BookIssueNotFoundException {
+		Optional<BookIssue> existingBookIssue = this.bookIssueRepo.findById(bookIssue.getIssueId());
+		
+		if(existingBookIssue.isEmpty()) {
+			throw new BookIssueNotFoundException();
+		}else {
+			return this.bookIssueRepo.save(bookIssue);
+		}
+	}
+
+	@Override
+	public BookIssue getBookIssueById(int id) throws BookIssueNotFoundException {
+		return this.bookIssueRepo.findById(id).orElseThrow(()-> new BookIssueNotFoundException());
 	}
 
 }

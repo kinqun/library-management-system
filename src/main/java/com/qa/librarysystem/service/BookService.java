@@ -3,8 +3,6 @@ package com.qa.librarysystem.service;
 import java.util.List;
 
 import com.qa.librarysystem.entity.Book;
-import com.qa.librarysystem.entity.BookIssue;
-import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.BookAlreadyExistsException;
 import com.qa.librarysystem.exceptions.BookNotFoundException;
 

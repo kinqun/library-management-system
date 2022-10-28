@@ -8,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.qa.librarysystem.entity.Book;
-import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.BookAlreadyExistsException;
 import com.qa.librarysystem.exceptions.BookNotFoundException;
-import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.repository.BookRepository;
 
 @Service
