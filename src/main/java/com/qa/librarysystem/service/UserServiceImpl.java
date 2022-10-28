@@ -1,12 +1,16 @@
 package com.qa.librarysystem.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.entity.User;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.exceptions.EmailAlreadyRegisteredException;
 import com.qa.librarysystem.exceptions.InvalidDateInputException;
 import com.qa.librarysystem.exceptions.UserAlreadyExistingExcecption;
@@ -87,6 +91,44 @@ public class UserServiceImpl implements UserService {
 			isDeleted = true;
 		}
 		return isDeleted;
+		
+	}
+
+	@Override
+	public ArrayList<Book> getUsersFavouriteBooks(int id) throws UserNotFoundException {
+		ArrayList<Integer> usersFavBooksIds = null;
+		try {
+			usersFavBooksIds = this.userRepo.findById(id).stream().map(u->u.getFavouriteBooks()).collect(Collectors.toList()).get(0);
+		}catch(Exception e) {
+			throw new UserNotFoundException();
+		}
+		ArrayList<Book> usersFavBooks = new ArrayList<>();
+		for(Integer n : usersFavBooksIds) {
+			Book currentBook = this.bookRepo.findById(n).get();
+			usersFavBooks.add(currentBook);
+		}
+		return usersFavBooks;
+	}
+
+	@Override
+	public User addFavouriteBook(int bid, int uid) throws BookNotFoundException, UserNotFoundException {
+		Optional<User> existingUser = this.userRepo.findById(uid);
+		Optional<Book> existingBook = this.bookRepo.findById(bid);
+		
+		if(existingBook.isEmpty()) {
+			throw new BookNotFoundException(); 
+		}
+		if(existingUser.isEmpty()) {
+			throw new UserNotFoundException();
+		}else {
+			User user = existingUser.get();
+			ArrayList<Integer> userFavBooks = user.getFavouriteBooks();
+			if(!userFavBooks.contains(bid)) {
+				userFavBooks.add(bid);
+			}
+			user.setFavouriteBooks(userFavBooks);
+			return this.userRepo.save(user);
+		}
 		
 	}
 
