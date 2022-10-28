@@ -43,7 +43,7 @@ application will initiate, refer to the api documentation below for help on usin
 
 
 ### API Endpoints
-Swagger url end point documentation:
+Swagger url end point documentation: 
 
 ```
 http://localhost:8082/swagger-ui/index.html 
@@ -52,10 +52,10 @@ http://localhost:8082/swagger-ui/index.html
 ### Demo - register a user
 <p>create a json containing the relevant key value properties</p>
 
-<img src="./images/swagger_register-user.PNG" width="70%" height="70%"/>
+<img src="./images/swagger_register-user.PNG" />
 
 <p>if the json contains valid values, you get a valid response </p>
-<img src="./images/swagger_register-user-resp.PNG" width="70%" height="70%"/>
+<img src="./images/swagger_register-user-resp.PNG"/>
 
 <br>
 <br>
@@ -63,9 +63,9 @@ http://localhost:8082/swagger-ui/index.html
 
 ### API End Points
 
-<img src="./images/swagger_controllers.PNG" width="70%" height="70%">
-<img src="./images/swagger_controllers_bi.PNG" width="70%" height="70%">
-<img src="./images/swagger_controllers_u.PNG" width="70%" height="70%"> 
+<img src="./images/swagger_controllers.PNG">
+<img src="./images/swagger_controllers_bi.PNG" >
+<img src="./images/swagger_controllers_u.PNG"> 
 
 <hr>
 
