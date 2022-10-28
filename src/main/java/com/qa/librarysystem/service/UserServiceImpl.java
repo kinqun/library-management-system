@@ -71,7 +71,7 @@ public class UserServiceImpl implements UserService {
 	public User updateUser(User user) throws UserNotFoundException {
 		Optional<User> existingUser = this.userRepo.findById(user.getUid());
 		
-		if(existingUser.isEmpty()) {
+		if(existingUser.isEmpty() || existingUser == null) {
 			throw new UserNotFoundException();
 		}else {
 			return this.userRepo.save(user);

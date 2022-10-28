@@ -17,18 +17,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.qa.librarysystem.entity.User;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
-@AutoConfigureTestDatabase(replace=Replace.NONE)
+@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
 public class UserRepositoryTest {
 	@Autowired
 	UserRepository userRepo;
@@ -141,14 +146,6 @@ public class UserRepositoryTest {
 		assertEquals("Adam", allUsers.get(0).getFname());
 	}
 	
-	@Test
-	@DisplayName("find-by-user-id-test")
-	public void givenValidId_whenFindUserById_returnUser() {
-		userRepo.save(user1);
-		Optional<User> fetchedUser = userRepo.findById(user1.getUid());
-		assertThat(fetchedUser).isNotEmpty();
-		assertEquals("Adam", fetchedUser.get().getFname());
-	}
 	
 	@Test
 	@DisplayName("find-by-user-invalid-id-test")
@@ -157,14 +154,7 @@ public class UserRepositoryTest {
 		assertThat(fetchedUser).isEmpty();
 	}
 	
-	@Test
-	@DisplayName("delete-user-by-id-test")
-	public void givenValidId_whenDeleteUserById_returnEmpty() {
-		userRepo.save(user1);
-		userRepo.deleteById(1001);
-		Optional<User> deletedUser = userRepo.findById(1001);
-		assertThat(deletedUser).isEmpty();
-	}
+
 	@Test
 	@DisplayName("delete-user-by-invalid-id-test")
 	public void givenInValidId_whenDeleteUserById_returnDeleted() {

@@ -119,7 +119,7 @@ public class BookIssueControllerTest {
 	@DisplayName("return-a-book-test")
 	public void given_whenReturnBook_returnUpdatedBookIssue() throws Exception {
 		when(this.bookIssueService.returnBook(any())).thenReturn(issue1);
-		mockMvc.perform(put("/api/v1/issue")
+		mockMvc.perform(put("/api/v1/issue/return")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(issue1)))
 		.andDo(MockMvcResultHandlers.print())
@@ -131,7 +131,7 @@ public class BookIssueControllerTest {
 	@DisplayName("return-a-book-with-invalid-userid-test")
 	public void givenNonExistingUserId_whenReturnBook_returnThrowsUserNotFoundException() throws Exception {
 		when(this.bookIssueService.returnBook(any())).thenThrow(new UserNotFoundException());
-		mockMvc.perform(put("/api/v1/issue")
+		mockMvc.perform(put("/api/v1/issue/return")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(issue1)))
 		.andDo(MockMvcResultHandlers.print())
@@ -143,7 +143,7 @@ public class BookIssueControllerTest {
 	@DisplayName("return-a-book-with-invalid-bookid-test")
 	public void givenNonExistingBookId_whenReturnBook_returnUpdatedBookIssue() throws Exception {
 		when(this.bookIssueService.returnBook(any())).thenThrow(new BookNotFoundException());
-		mockMvc.perform(put("/api/v1/issue")
+		mockMvc.perform(put("/api/v1/issue/return")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(asJsonString(issue1)))
 		.andDo(MockMvcResultHandlers.print())
