@@ -35,7 +35,7 @@ import com.qa.librarysystem.service.BookServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class BookRepositoryTest {
 	

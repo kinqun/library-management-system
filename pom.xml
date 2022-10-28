@@ -16,9 +16,12 @@
 		<java.version>17</java.version>
 	</properties>
 	<dependencies>
-	
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+		</dependency>
 
-		
 
 		<dependency>
 			<groupId>io.springfox</groupId>

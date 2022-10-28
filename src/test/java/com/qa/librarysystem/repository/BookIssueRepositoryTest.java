@@ -32,7 +32,7 @@ import com.qa.librarysystem.entity.BookIssue;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 public class BookIssueRepositoryTest {
 	@Autowired
