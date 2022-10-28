@@ -32,7 +32,11 @@ Create an application using Spring with the following components:
 
 ### Instructions
 
-1. downalod and locate library-management-system.jar file
+```
+https://github.com/kinqun/library-management-system
+```
+
+1. download and locate library-management-system.jar file(download release from github link )
 2. open cmd and check that the path is set to the same destination as the aforementioned .jar file
 3. enter the following command :
 
