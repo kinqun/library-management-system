@@ -15,13 +15,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -30,8 +34,9 @@ import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.service.BookServiceImpl;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
-@AutoConfigureTestDatabase(replace=Replace.NONE)
+@SpringBootTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
 public class BookRepositoryTest {
 	
 	@Autowired
@@ -70,14 +75,6 @@ public class BookRepositoryTest {
 	}
 	
 	@Test
-	@DisplayName("find-book-by-id-test")
-	public void givenValidBookId_whenFindBookById_returnBook() {
-		this.bookRepo.save(book1);
-		Optional<Book> fetchedBook = this.bookRepo.findById(1001);
-		assertEquals("Book Name A", fetchedBook.get().getBookName());
-	}
-	
-	@Test
 	@DisplayName("find-book-by-author-and-name-test")
 	public void givenValidBooknameAndValidAuthor_whenFindBookByAuthorAndName_returnBook() {
 		this.bookRepo.save(book1);
@@ -104,24 +101,13 @@ public class BookRepositoryTest {
 		assertNull(fetchedBook);
 	}
 	
-	@Test
-	@DisplayName("delete-book-test")
-	public void givenExistingBookId_whenDeleteBook_return() {
-		this.bookRepo.save(book1);
-		this.bookRepo.deleteById(1001);
-		Optional<Book> fetchedBook = this.bookRepo.findById(1001);
-		assertThat(fetchedBook).isEmpty();
-	}
 	
 	@Test
 	@DisplayName("get-all-books")
 	public void given_whenGetAllBooks_returnBooksList() {
 		this.bookRepo.save(book1);
-		this.bookRepo.save(book2);
-		this.bookRepo.save(book3);
 		List<Book> newBookList = this.bookRepo.findAll();
-		assertEquals(3, newBookList.size());
-		assertEquals("Book Name B", newBookList.get(1).getBookName());
+		assertEquals(1, newBookList.size());
 		assertEquals("Book Name A", newBookList.get(0).getBookName());
 	}
 	

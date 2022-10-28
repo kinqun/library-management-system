@@ -132,7 +132,7 @@ public class UserServiceImplTest {
 	@Test
 	@DisplayName("update-non-existing-user-test")
 	public void givenNonExistingUser_whenUpdateUser_returnThrowsUserNotFoundException() throws UserNotFoundException {
-		when(userRepo.findById(anyInt())).thenReturn(null);
+		when(userRepo.findById(anyInt())).thenReturn(Optional.empty());
 		assertThrows(UserNotFoundException.class, ()-> userService.updateUser(user1));
 	}
 	
