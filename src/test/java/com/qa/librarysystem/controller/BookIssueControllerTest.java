@@ -2,9 +2,11 @@ package com.qa.librarysystem.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,10 +33,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.qa.librarysystem.entity.BookIssue;
 import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.BookNotAvailableException;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.exceptions.UserAlreadyCheckedOutBookException;
+import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.repository.BookIssueRepository;
 import com.qa.librarysystem.service.BookIssueServiceImpl;
 
@@ -108,4 +114,59 @@ public class BookIssueControllerTest {
 		.andExpect(res-> assertEquals("user already checked out book", res.getResponse().getErrorMessage()))
 		.andExpect(res-> assertTrue(res.getResolvedException() instanceof UserAlreadyCheckedOutBookException));		
 	}
+	
+	@Test
+	@DisplayName("return-a-book-test")
+	public void given_whenReturnBook_returnUpdatedBookIssue() throws Exception {
+		when(this.bookIssueService.returnBook(any())).thenReturn(issue1);
+		mockMvc.perform(put("/api/v1/issue")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(issue1)))
+		.andDo(MockMvcResultHandlers.print())
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.issueId").value("101"));		
+	}
+	
+	@Test
+	@DisplayName("return-a-book-with-invalid-userid-test")
+	public void givenNonExistingUserId_whenReturnBook_returnThrowsUserNotFoundException() throws Exception {
+		when(this.bookIssueService.returnBook(any())).thenThrow(new UserNotFoundException());
+		mockMvc.perform(put("/api/v1/issue")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(issue1)))
+		.andDo(MockMvcResultHandlers.print())
+		.andExpect(status().isNotFound())
+		.andExpect(res->assertTrue(res.getResolvedException() instanceof UserNotFoundException));		
+	}
+	
+	@Test
+	@DisplayName("return-a-book-with-invalid-bookid-test")
+	public void givenNonExistingBookId_whenReturnBook_returnUpdatedBookIssue() throws Exception {
+		when(this.bookIssueService.returnBook(any())).thenThrow(new BookNotFoundException());
+		mockMvc.perform(put("/api/v1/issue")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(asJsonString(issue1)))
+		.andDo(MockMvcResultHandlers.print())
+		.andExpect(status().isNotFound())
+		.andExpect(res->assertTrue(res.getResolvedException() instanceof BookNotFoundException));			
+	}
+	
+
+	public static String asJsonString(Object obj) {
+		ObjectMapper Obj = JsonMapper.builder()
+		        .findAndAddModules()
+		        .build();
+		//ObjectMapper Obj = new ObjectMapper();
+		String jsonStr = null;
+		
+		try {
+			jsonStr = Obj.writeValueAsString(obj);
+			System.out.println(jsonStr);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return jsonStr;
+	}
+	
+	
 }
