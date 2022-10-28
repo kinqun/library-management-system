@@ -1,6 +1,7 @@
 package com.qa.librarysystem.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -26,7 +27,9 @@ import com.qa.librarysystem.entity.Book;
 import com.qa.librarysystem.entity.BookIssue;
 import com.qa.librarysystem.entity.User;
 import com.qa.librarysystem.exceptions.BookNotAvailableException;
+import com.qa.librarysystem.exceptions.BookNotFoundException;
 import com.qa.librarysystem.exceptions.UserAlreadyCheckedOutBookException;
+import com.qa.librarysystem.exceptions.UserNotFoundException;
 import com.qa.librarysystem.repository.BookIssueRepository;
 import com.qa.librarysystem.repository.BookRepository;
 import com.qa.librarysystem.repository.UserRepository;
@@ -72,7 +75,7 @@ public class BookIssueServiceImplTest {
 	
 	@Test
 	@DisplayName("create-issue-test")
-	public void givenUidBid_whenCreateBookIssue_returnBookIssue() throws BookNotAvailableException, UserAlreadyCheckedOutBookException {
+	public void givenUidBid_whenCreateBookIssue_returnBookIssue() throws BookNotAvailableException, UserAlreadyCheckedOutBookException, BookNotFoundException, UserNotFoundException {
 		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
 		when(this.userRepo.findById(anyInt())).thenReturn(Optional.of(user1));
 		when(this.bookIssueRepo.save(any())).thenReturn(issue1);
@@ -106,4 +109,35 @@ public class BookIssueServiceImplTest {
 		
 		assertThrows(UserAlreadyCheckedOutBookException.class, ()->this.bookIssueService.createBookIssue(1001, 1001));
 	}
+	
+	@Test
+	@DisplayName("return-book-test")
+	public void givenBookIssue_whenReturnBook_returnUpdatedBookIssue() throws BookNotAvailableException, UserAlreadyCheckedOutBookException, BookNotFoundException, UserNotFoundException {
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
+		when(this.userRepo.findById(anyInt())).thenReturn(Optional.of(user1));
+		when(this.bookRepo.save(book1)).thenReturn(book1);
+		when(this.userRepo.save(user1)).thenReturn(user1);
+		when(this.bookIssueRepo.save(issue1)).thenReturn(issue1);
+		issue1.setReturnedDate(LocalDate.parse("2022-10-28"));
+		BookIssue updatedBookIssue = this.bookIssueService.returnBook(issue1);
+
+		assertNotNull(updatedBookIssue.getReturnedDate());
+	}
+	
+	@Test
+	@DisplayName("return-book-non-existing-uid-test")
+	public void givenBookIssueWithNonExistingUid_whenReturnBook_returnThrowsUserNotFoundException() throws BookNotAvailableException, UserAlreadyCheckedOutBookException, BookNotFoundException, UserNotFoundException {
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.of(book1));
+		when(this.userRepo.findById(anyInt())).thenReturn(Optional.empty());
+		assertThrows(UserNotFoundException.class, ()->this.bookIssueService.returnBook(issue1));
+	}
+	
+	@Test
+	@DisplayName("return-book-non-existing-bid-test")
+	public void givenBookIssueWithNonExistingBid_whenReturnBook_returnThrowsBookNotFoundException() throws BookNotAvailableException, UserAlreadyCheckedOutBookException, BookNotFoundException, UserNotFoundException {
+		when(this.bookRepo.findById(anyInt())).thenReturn(Optional.empty());
+		when(this.userRepo.findById(anyInt())).thenReturn(Optional.of(user1));
+		assertThrows(BookNotFoundException.class, ()->this.bookIssueService.returnBook(issue1));
+	}
+	
 }
