@@ -14,7 +14,8 @@ import springfox.documentation.swagger2.mappers.ModelMapper;
 
 @SpringBootApplication
 @EnableWebMvc
-@ComponentScan("com.qa.librarysystem")
+
+//@ComponentScan("com.qa.librarysystem")
 public class LibraryManagementSystemApplication {
 
 	@Bean
@@ -31,7 +32,7 @@ public class LibraryManagementSystemApplication {
     public Docket api() { 
         return new Docket(DocumentationType.SWAGGER_2)  
           .select()                                  
-          .apis(RequestHandlerSelectors.basePackage("com.qa.emp.controller"))              
+          .apis(RequestHandlerSelectors.basePackage("com.qa.librarysystem.controller"))              
           .paths(PathSelectors.any())                          
           .build();                                           
     }

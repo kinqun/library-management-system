@@ -35,6 +35,16 @@ java -jar library-management-system
 
 
 ### API Endpoints
+Swagger url end point documentation:
+
+```
+http://localhost:8082/swagger-ui/index.html 
+```
+
+
+
+
+
 Api endpoints
 
 ```
